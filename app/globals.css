@@ -1,0 +1,376 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Tokens — exposed as CSS variables for cases where Tailwind utilities are
+   not the right tool (e.g. SVG fills, third-party iframes, OG images).
+   --------------------------------------------------------------------------- */
+:root {
+  --bg: #faf8f4;
+  --surface: #f2efe7;
+  --ink: #1a1a1a;
+  --ink-2: #5c5a55;
+  /* ink-3 darkened from the original #9a968d to meet WCAG 2.1 AA contrast
+     (4.5:1) against --bg. The build prompt's spec value tested at ~2.76:1
+     and would fail accessibility audit on every caption, eyebrow, and
+     metadata line. The new value tests at ~4.83:1 against --bg, preserves
+     the warm-gray tone, and stays clearly lighter than --ink-2. */
+  --ink-3: #706b65;
+  --rule: #e8e4da;
+  --accent: #2a4365;
+
+  --seeker-ink: #185fa5;
+  --seeker-fill: #e6f1fb;
+  --believer-ink: #0f6e56;
+  --believer-fill: #e1f5ee;
+  --student-ink: #534ab7;
+  --student-fill: #eeedfe;
+
+  --font-serif-fallback: Georgia, "Iowan Old Style", serif;
+  --font-sans-fallback: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.dark {
+  --bg: #1c1a16;
+  --surface: #23211c;
+  --ink: #eae6dc;
+  --ink-2: #b5b0a4;
+  /* Same WCAG fix in dark mode — original #807b71 fell short against the
+     dark background (~4.21:1). New value tests at ~4.53:1. */
+  --ink-3: #8a857a;
+  --rule: #2e2b25;
+  --accent: #7fa3d1;
+}
+
+/* ---------------------------------------------------------------------------
+   Base — body, links, focus, selection.
+   --------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans text-body;
+    font-weight: 400;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      @apply text-body-lg;
+    }
+  }
+
+  .dark body {
+    @apply bg-bg-dark text-ink-dark;
+  }
+
+  /* Headings — serif, weight 500 always. */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+
+  /* Links — accent color, underline appears on hover only.
+     Underline offset gives the typography room to breathe. */
+  a {
+    @apply text-accent;
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 0.5px;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .dark a {
+    @apply text-accent-dark;
+  }
+
+  /* Focus rings — visible for keyboard, invisible for mouse. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Default hairline divider — the only divider style allowed. */
+  hr {
+    @apply border-0 border-t-hairline border-rule;
+  }
+  .dark hr {
+    @apply border-rule-dark;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Components — small, reusable building blocks expressed as CSS where a
+   utility soup would obscure intent.
+   --------------------------------------------------------------------------- */
+@layer components {
+  /* The eyebrow text used above hero headlines and section headings.
+     Lowercase, tracked, small, tertiary color. Sentence case is the rule
+     site-wide — eyebrows render in lowercase via text-transform. */
+  .eyebrow {
+    @apply text-caption text-ink-3;
+    text-transform: lowercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  /* Buttons — minimal, rectangular, hairline border. No shadows, anywhere.
+     The !important on box-shadow defends against any browser/extension
+     attempting to add focus shadows or default form chrome. */
+  .btn {
+    @apply inline-flex items-center justify-center px-5 py-3 text-small font-medium;
+    border-radius: 2px;
+    transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+    box-shadow: none !important;
+  }
+  .btn-primary {
+    @apply btn text-bg;
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .btn-primary:hover {
+    background-color: #1f3350;
+    border-color: #1f3350;
+    text-decoration: none;
+  }
+  .dark .btn-primary {
+    color: var(--bg);
+    background-color: var(--accent);
+    border-color: var(--accent);
+  }
+  /* Secondary uses a 1px crisp border in the rule color rather than the
+     0.5px hairline — sub-pixel borders anti-alias as a soft halo on some
+     displays which reads as a faux shadow. 1px in the muted rule color
+     keeps the editorial restraint without the optical artifact. */
+  .btn-secondary {
+    @apply btn text-ink;
+    background: transparent;
+    border: 1px solid var(--rule);
+  }
+  .btn-secondary:hover {
+    background-color: var(--surface);
+    text-decoration: none;
+  }
+  .dark .btn-secondary {
+    color: var(--ink-dark);
+    border-color: var(--rule);
+  }
+
+  /* Audience pills — text + soft fill. Used for tagging UI only. */
+  .pill {
+    @apply inline-flex items-center text-caption px-2 py-0.5;
+    border-radius: 2px;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .pill-seeker { color: var(--seeker-ink); background: var(--seeker-fill); }
+  .pill-believer { color: var(--believer-ink); background: var(--believer-fill); }
+  .pill-student { color: var(--student-ink); background: var(--student-fill); }
+  .pill-neutral {
+    color: var(--ink-2);
+    background: var(--surface);
+  }
+
+  /* Drop cap — the site's one visual flourish. Applied to article body via
+     .prose-article p:first-of-type::first-letter. */
+  .has-dropcap > p:first-of-type::first-letter {
+    @apply font-serif;
+    color: var(--accent);
+    float: left;
+    font-size: 3.4em;
+    line-height: 0.9;
+    padding-right: 0.08em;
+    padding-top: 0.08em;
+    font-weight: 500;
+  }
+
+  /* Pull quote — left-bordered, serif italic, secondary color. */
+  .pullquote {
+    @apply font-serif italic text-ink-2 my-12;
+    border-left: 0.5px solid var(--rule);
+    padding: 0.5rem 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+  .dark .pullquote {
+    color: var(--ink-2);
+    border-left-color: var(--rule);
+  }
+
+  /* Scripture reference — small caps, hairline rule above. */
+  .scripture-ref {
+    @apply text-caption text-ink-3 mt-2;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.06em;
+    border-top: 0.5px solid var(--rule);
+    padding-top: 0.5rem;
+  }
+
+  /* Newsletter input — suppress browser-injected field chrome.
+     The decorations (clear-X in Edge, password-reveal in Chrome on
+     Windows, password-manager site icons) only appear on fields the
+     browser/extension classifies as credential-bearing; defending in
+     CSS too is belt-and-suspenders. */
+  .newsletter-input::-webkit-search-cancel-button,
+  .newsletter-input::-webkit-search-decoration,
+  .newsletter-input::-webkit-credentials-auto-fill-button,
+  .newsletter-input::-webkit-contacts-auto-fill-button,
+  .newsletter-input::-ms-clear,
+  .newsletter-input::-ms-reveal {
+    display: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Prose — used inside article bodies.
+
+   The article body is laid out as a CSS grid with three reading registers:
+
+     - body     (default for paragraphs, headings, lists, asides) — 36rem
+     - medium   (pull quotes)                                     — 44rem
+     - wide     (figures, images, audio, video, full-bleed cards) — 56rem
+
+   The grid handles its own horizontal gutters (1.25rem on mobile, 2rem on
+   tablet+) so the article wrapper does NOT add padding — letting wide
+   breakouts use the full chrome width.
+
+   On viewports narrower than the body track, body shrinks to viewport
+   minus gutters; breakouts span the full grid (edge-to-edge minus gutters).
+   --------------------------------------------------------------------------- */
+.prose-article {
+  --gutter: 1.25rem;
+  --body: 36rem;
+  --medium: 44rem;
+  --wide: 56rem;
+
+  display: grid;
+  grid-template-columns:
+    [full-start]
+      minmax(var(--gutter), 1fr)
+    [body-start]
+      min(100% - (var(--gutter) * 2), var(--body))
+    [body-end]
+      minmax(var(--gutter), 1fr)
+    [full-end];
+}
+
+@media (min-width: 768px) {
+  .prose-article {
+    --gutter: 2rem;
+  }
+}
+
+/* Default placement: every direct child sits in the body column. */
+.prose-article > * {
+  grid-column: body-start / body-end;
+}
+
+/* Vertical rhythm. */
+.prose-article > * + * {
+  margin-top: 1.25em;
+}
+.prose-article > h2 {
+  @apply text-h2 md:text-h2-lg;
+  margin-top: 4rem;
+}
+.prose-article > h3 {
+  @apply text-h3 md:text-h3-lg;
+  margin-top: 2.5rem;
+}
+
+/* Bare blockquote in MDX (e.g. ` > … `) inherits the pullquote treatment
+   and the medium breakout. */
+.prose-article > blockquote {
+  @apply pullquote;
+}
+
+/* Lists. */
+.prose-article > ul,
+.prose-article > ol {
+  padding-left: 1.5rem;
+}
+.prose-article > ul > li + li,
+.prose-article > ol > li + li {
+  margin-top: 0.5rem;
+}
+
+/* Medium breakout — pull quotes. Span the full grid then cap at 44rem
+   centered. The PullQuote component renders <figure data-breakout="medium">
+   so this rule wins over the bare-figure rule below via attribute
+   specificity. */
+.prose-article > [data-breakout="medium"] {
+  grid-column: full-start / full-end;
+  justify-self: center;
+  width: 100%;
+  max-width: var(--medium);
+}
+
+/* Wide breakout — figures, images, embeds, anything explicitly wide.
+   Default for any <figure> that isn't overridden, and for any element
+   that opts in via data-breakout="wide". */
+.prose-article > figure,
+.prose-article > [data-breakout="wide"] {
+  grid-column: full-start / full-end;
+  justify-self: center;
+  width: 100%;
+  max-width: var(--wide);
+}
+
+/* ---------------------------------------------------------------------------
+   Print — strip nav, increase body, show URL in footer.
+   --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   Reduced motion — honor the user preference. The site uses very little
+   motion already; this disables the rest belt-and-suspenders.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --ink: #000000;
+  }
+  header[data-site-header],
+  footer[data-site-footer],
+  [data-no-print] {
+    display: none !important;
+  }
+  body {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: #000;
+    background: #fff;
+  }
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+  .prose-article {
+    max-width: none;
+  }
+}
