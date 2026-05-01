@@ -47,12 +47,17 @@ const QUESTIONS: Question[] = [
   },
   {
     number: 7,
+    question: "Does it matter how I'm baptized?",
+    slug: "in-the-name",
+  },
+  {
+    number: 8,
     question: "What happens after I die?",
     slug: "what-happens-after-i-die",
   },
-  { number: 8, question: "I have doubts. Is that okay?", slug: "doubt" },
-  { number: 9, question: "What is the church for?", slug: "what-is-the-church-for" },
-  { number: 10, question: "What's next?", slug: "whats-next" },
+  { number: 9, question: "I have doubts. Is that okay?", slug: "doubt" },
+  { number: 10, question: "What is the church for?", slug: "what-is-the-church-for" },
+  { number: 11, question: "What's next?", slug: "whats-next" },
 ];
 
 export default function StartPage() {
