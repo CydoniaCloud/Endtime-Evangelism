@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { Container } from "@/components/Container";
 import { PagefindSearch } from "@/components/PagefindSearch";
@@ -21,7 +22,9 @@ export default function SearchPage() {
         <h1 className="font-serif text-h1 md:text-h1-lg text-ink dark:text-ink-dark mb-10">
           Find a piece.
         </h1>
-        <PagefindSearch />
+        <Suspense fallback={null}>
+          <PagefindSearch />
+        </Suspense>
       </Container>
     </section>
   );

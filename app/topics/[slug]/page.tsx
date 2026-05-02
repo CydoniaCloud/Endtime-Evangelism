@@ -6,7 +6,6 @@ import { ArticleList } from "@/components/ArticleListItem";
 import { getAllContent, getContentByTopic } from "@/lib/content";
 import {
   TOPIC_LABELS,
-  TOPICS,
   isTopic,
   type Topic,
 } from "@/content/taxonomy/topics";
@@ -75,6 +74,3 @@ export default async function TopicPage({
     </section>
   );
 }
-
-// Keep the static topic list available for build-time analysis tools.
-export const _allTopics = TOPICS;
