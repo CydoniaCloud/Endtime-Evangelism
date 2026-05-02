@@ -55,9 +55,19 @@ const QUESTIONS: Question[] = [
     question: "What happens after I die?",
     slug: "what-happens-after-i-die",
   },
-  { number: 9, question: "I have doubts. Is that okay?", slug: "doubt" },
-  { number: 10, question: "What is the church for?", slug: "what-is-the-church-for" },
-  { number: 11, question: "What's next?", slug: "whats-next" },
+  {
+    number: 9,
+    question: "By what will God judge the world?",
+    slug: "judgement",
+  },
+  {
+    number: 10,
+    question: "Does God still perform miracles?",
+    slug: "supernatural",
+  },
+  { number: 11, question: "I have doubts. Is that okay?", slug: "doubt" },
+  { number: 12, question: "What is the church for?", slug: "what-is-the-church-for" },
+  { number: 13, question: "What's next?", slug: "whats-next" },
 ];
 
 export default function StartPage() {

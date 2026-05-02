@@ -5,7 +5,7 @@ import Script from "next/script";
  * environment variables. No script is added if neither is configured.
  *
  * Plausible: NEXT_PUBLIC_PLAUSIBLE_DOMAIN
- *   e.g. NEXT_PUBLIC_PLAUSIBLE_DOMAIN=endtimeevangelism.example
+ *   e.g. NEXT_PUBLIC_PLAUSIBLE_DOMAIN=endtimevangelism.org
  *
  * Umami:    NEXT_PUBLIC_UMAMI_WEBSITE_ID + NEXT_PUBLIC_UMAMI_SCRIPT_URL
  *   e.g. NEXT_PUBLIC_UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx

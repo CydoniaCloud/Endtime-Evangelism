@@ -26,8 +26,8 @@ export default function ContactPage() {
           <p>
             The full contact page is being prepared. For now, the simplest
             way to reach the editorial team is by email at{" "}
-            <a href="mailto:info@bibletabernacle.co.za">
-              info@bibletabernacle.co.za
+            <a href="mailto:info@endtimevangelism.org">
+              info@endtimevangelism.org
             </a>
             .
           </p>

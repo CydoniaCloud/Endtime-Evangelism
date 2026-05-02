@@ -7,7 +7,7 @@ export const SITE = {
   name: "Endtime Evangelism",
   shortName: "Endtime Evangelism",
   tagline: "The principal theme of the Bible is Jesus Christ.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://endtimeevangelism.example",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://endtimevangelism.org",
   // Set to a real street address before launch. While null, the footer
   // hides the address line entirely — placeholder text never ships.
   ministryAddress: null as string | null,
