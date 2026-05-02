@@ -45,6 +45,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
   },
   robots: { index: true, follow: true },
+  // RSS auto-discovery — feed readers and discovery tools look for an
+  // <link rel="alternate" type="application/rss+xml"> tag on any page
+  // and use it to find the site's feed.
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

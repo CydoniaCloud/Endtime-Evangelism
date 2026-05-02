@@ -26,14 +26,44 @@ function emit(data: object) {
 }
 
 export function OrganizationJsonLd() {
-  return emit({
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: SITE.name,
-    url: SITE.url,
-    logo: `${SITE.url}/icon.svg`,
-    sameAs: [],
-  });
+  return (
+    <>
+      {emit({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": `${SITE.url}#organization`,
+        name: SITE.name,
+        url: SITE.url,
+        logo: `${SITE.url}/icon.svg`,
+        description: SITE.tagline,
+        // Pointer to the page that describes the organization in human
+        // form — schema.org/about — gives crawlers a way to ground the
+        // entity beyond the bare metadata fields.
+        mainEntityOfPage: { "@type": "AboutPage", "@id": `${SITE.url}/about` },
+        sameAs: [],
+      })}
+      {/* WebSite schema with SearchAction lets Google show the site
+          search box directly in search results. Points at /search with
+          the user's query interpolated. */}
+      {emit({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": `${SITE.url}#website`,
+        name: SITE.name,
+        url: SITE.url,
+        description: SITE.tagline,
+        publisher: { "@id": `${SITE.url}#organization` },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${SITE.url}/search?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      })}
+    </>
+  );
 }
 
 export function ArticleJsonLd({ record }: { record: ContentRecord }) {
@@ -49,17 +79,13 @@ export function ArticleJsonLd({ record }: { record: ContentRecord }) {
     description: record.dek ?? record.description,
     datePublished: record.publishedAt,
     dateModified: record.updatedAt,
-    author: {
-      "@type": "Organization",
-      name: SITE.name,
-      url: SITE.url,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      url: SITE.url,
-      logo: { "@type": "ImageObject", url: `${SITE.url}/icon.svg` },
-    },
+    // Reference the layout-rendered Organization by @id rather than
+    // duplicating its fields here. Single source of truth for the
+    // entity; smaller payload per article page; cleaner for crawlers
+    // that follow @id references.
+    author: { "@id": `${SITE.url}#organization` },
+    publisher: { "@id": `${SITE.url}#organization` },
+    isPartOf: { "@id": `${SITE.url}#website` },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     image: `${url}/opengraph-image`,
     url,
