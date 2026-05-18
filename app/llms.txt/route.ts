@@ -70,6 +70,14 @@ export async function GET() {
   sections.push(`- [RSS feed](${SITE.url}/feed.xml): subscribe to new pieces`);
   sections.push(`- [Sitemap](${SITE.url}/sitemap.xml)\n`);
 
+  sections.push(`## Local outreach\n`);
+  sections.push(
+    `For people in Greater Sudbury and French River, Ontario, Canada.\n`,
+  );
+  sections.push(
+    `- [Sudbury & French River](${SITE.url}/sudbury): the local landing page — names the affiliated church (Spoken Word Christian Fellowship), lists the communities served (Greater Sudbury, French River, Lively, Val Caron, Hanmer, Chelmsford, Capreol, Noëlville, Alban), and answers FAQs about meeting and contact.\n`,
+  );
+
   sections.push(`## Site info\n`);
   sections.push(`- [About](${SITE.url}/about): mission, vision, and how to support the work`);
   sections.push(`- [Statement of faith](${SITE.url}/statement-of-faith)`);

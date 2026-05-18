@@ -29,6 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: url("/about"), changeFrequency: "yearly", priority: 0.5, lastModified: now },
     { url: url("/contact"), changeFrequency: "yearly", priority: 0.4, lastModified: now },
     { url: url("/statement-of-faith"), changeFrequency: "yearly", priority: 0.5, lastModified: now },
+    // Local landing — high priority because it is the entry point we want
+    // Sudbury/French River search and AI-assistant queries to surface.
+    { url: url("/sudbury"), changeFrequency: "monthly", priority: 0.9, lastModified: now },
   ];
 
   const articleRoutes: MetadataRoute.Sitemap = all.map((r) => ({

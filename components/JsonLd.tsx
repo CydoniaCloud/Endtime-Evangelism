@@ -5,10 +5,11 @@ import type { ContentRecord } from "@/lib/content";
 /**
  * JSON-LD structured data for search-engine consumption.
  *
- * Three schemas in use:
+ * Schemas in use:
  *   - Organization in the root layout (one entry, site-wide)
  *   - Article (or its Sermon variant when type=sermon) in /[type]/[slug]
  *   - BreadcrumbList in the article page
+ *   - Church + FAQPage + BreadcrumbList on /sudbury (local landing)
  *
  * Rendered as `<script type="application/ld+json">` blocks. We use
  * dangerouslySetInnerHTML because Next.js renders objects as text otherwise
@@ -119,5 +120,120 @@ export function BreadcrumbJsonLd({ record }: { record: ContentRecord }) {
         item: `${SITE.url}/${record.type}/${record.slug}`,
       },
     ],
+  });
+}
+
+/**
+ * Local-landing schemas for /sudbury.
+ *
+ * Three blocks:
+ *   1. Church (Spoken Word Christian Fellowship) with parentOrganization
+ *      referencing the layout-level Organization by @id. We omit the
+ *      address (the ministry's preference) and instead use areaServed —
+ *      the right pattern for service-area entities. Google's local
+ *      ranking still uses the verified address from Google Business
+ *      Profile; areaServed is what's published.
+ *   2. WebPage tying the page itself to the Church entity. Helps search
+ *      engines and AI assistants understand "this page is about that
+ *      organization."
+ *   3. BreadcrumbList placing the page under the homepage.
+ *
+ * Towns covered are kept in one array so the list stays in sync between
+ * schema and the visible page copy when updates happen.
+ */
+export const SUDBURY_AREA_SERVED = [
+  "Greater Sudbury",
+  "French River",
+  "Lively",
+  "Val Caron",
+  "Hanmer",
+  "Chelmsford",
+  "Capreol",
+  "Noëlville",
+  "Alban",
+] as const;
+
+export function LocalChurchJsonLd() {
+  const pageUrl = `${SITE.url}/sudbury`;
+  return (
+    <>
+      {emit({
+        "@context": "https://schema.org",
+        "@type": "Church",
+        "@id": `${pageUrl}#church`,
+        name: "Spoken Word Christian Fellowship",
+        url: pageUrl,
+        description:
+          "Local Christian fellowship in the French River area of Northern Ontario, connected to the work of Endtime Evangelism.",
+        parentOrganization: { "@id": `${SITE.url}#organization` },
+        areaServed: SUDBURY_AREA_SERVED.map((name) => ({
+          "@type": "City",
+          name,
+        })),
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "general inquiry",
+          url: `${SITE.url}/contact`,
+          availableLanguage: "English",
+        },
+      })}
+      {emit({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": pageUrl,
+        url: pageUrl,
+        name: "Christian ministry in Sudbury and French River",
+        isPartOf: { "@id": `${SITE.url}#website` },
+        about: { "@id": `${pageUrl}#church` },
+        inLanguage: "en-CA",
+      })}
+    </>
+  );
+}
+
+export function LocalBreadcrumbJsonLd() {
+  return emit({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE.url,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Sudbury & French River",
+        item: `${SITE.url}/sudbury`,
+      },
+    ],
+  });
+}
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+/**
+ * FAQPage schema. AI assistants (ChatGPT, Perplexity, Google AI Overviews)
+ * weight FAQ-shaped content heavily — each Q/A pair becomes a directly
+ * quotable answer. Keep `answer` plain text; HTML tags inside the answer
+ * are not parsed by all consumers and break some validators.
+ */
+export function FaqJsonLd({ items }: { items: ReadonlyArray<FaqItem> }) {
+  return emit({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
   });
 }

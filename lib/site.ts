@@ -24,5 +24,8 @@ export const NAV_FOOTER = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/statement-of-faith", label: "Statement of faith" },
+  // Local landing — footer placement gives the page an internal link from
+  // every page on the site without crowding the primary nav.
+  { href: "/sudbury", label: "Sudbury & French River" },
   { href: "/feed.xml", label: "RSS" },
 ] as const;

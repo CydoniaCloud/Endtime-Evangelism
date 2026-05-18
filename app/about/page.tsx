@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Container } from "@/components/Container";
 import { PullQuote } from "@/components/PullQuote";
@@ -26,7 +27,8 @@ export default function AboutPage() {
           A non-profit outreach ministry, supported by Message believers.
         </h1>
         <p className="text-body md:text-body-lg text-ink-2 dark:text-ink-dark-2 mt-4">
-          Sudbury, Ontario, Canada &middot; Margarita Island, Venezuela
+          <Link href="/sudbury">Sudbury, Ontario, Canada</Link> &middot;
+          Margarita Island, Venezuela
         </p>
 
         {/* Mission ------------------------------------------------------ */}
